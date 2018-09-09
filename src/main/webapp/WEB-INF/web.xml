@@ -1,0 +1,86 @@
+<!DOCTYPE web-app PUBLIC
+        "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+        "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app>
+    <display-name>edu.stu:servlet-jsp-vpn:1.0-SNAPSHOT Web Application</display-name>
+
+
+    <welcome-file-list>
+        <welcome-file>index.htm</welcome-file>
+        <welcome-file>index.html</welcome-file>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+
+    <context-param>
+        <param-name>servlet-jsp-vpn</param-name>
+        <param-value>servlet-jsp-vpn.log</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>username</param-name>
+        <param-value>stunetlab</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>password</param-name>
+        <param-value>crypto</param-value>
+    </context-param>
+
+    <filter>
+        <filter-name>DownloadFilter</filter-name>
+        <filter-class>edu.stu.controller.DownloadFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>DownloadFilter</filter-name>
+        <url-pattern>/config.do</url-pattern>
+    </filter-mapping>
+
+    <servlet>
+        <servlet-name>initParameters</servlet-name>
+        <description>Init the application parameters</description>
+        <servlet-class>edu.stu.InitParameters</servlet-class>
+        <load-on-startup>0</load-on-startup>
+    </servlet>
+    <servlet>
+        <init-param>
+            <param-name>apk</param-name>
+            <param-value>/WEB-INF/files/openvpn-connect-3-0-5.apk</param-value>
+        </init-param>
+        <init-param>
+            <param-name>exe</param-name>
+            <param-value>/WEB-INF/files/openvpn-install-2.4.6-I602.exe</param-value>
+        </init-param>
+        <servlet-name>Download</servlet-name>
+        <servlet-class>edu.stu.controller.Download</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ConfigDownload</servlet-name>
+        <init-param>
+            <param-name>shellScriptPath</param-name>
+            <param-value>/var/tomcat/get_ovpn.sh</param-value>
+        </init-param>
+        <init-param>
+            <param-name>clientConfigFileDir</param-name>
+            <param-value>/var/tomcat/ovpn-client-files/</param-value>
+        </init-param>
+        <servlet-class>edu.stu.controller.ConfigDownload</servlet-class>
+    </servlet>
+
+
+    <servlet-mapping>
+        <servlet-name>Download</servlet-name>
+        <url-pattern>/download.do</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ConfigDownload</servlet-name>
+        <url-pattern>/config.do</url-pattern>
+    </servlet-mapping>
+
+
+    <error-page>
+        <error-code>404</error-code>
+        <location>/404.html</location>
+    </error-page>
+
+</web-app>
