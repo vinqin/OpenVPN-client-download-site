@@ -32,7 +32,8 @@
                 </tr>
                 <tr>
                     <td class="logintd2">
-                        <input type="password" id="password" name="password"/>
+                        <input type="password" id="_password" name="_password"/>
+                        <input type="hidden" id="password" name="password">
                     </td>
                 </tr>
                 <tr>
@@ -50,8 +51,10 @@
 <script type="text/ecmascript" src="js/sha1.js"></script>
 <script type="text/javascript">
     function beforeSubmit() {
+        var _psw = document.getElementById("_password");
+        var sha = hex_sha1(_psw.value);
+        _psw.value = ""; // for security
         var psw = document.getElementById("password");
-        var sha = hex_sha1(psw.value);
         psw.value = sha;
         return true;
     }

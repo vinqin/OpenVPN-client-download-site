@@ -1,10 +1,11 @@
-<!DOCTYPE web-app PUBLIC
-        "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
-        "http://java.sun.com/dtd/web-app_2_3.dtd" >
+<?xml version="1.0" encoding="utf-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+		 http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1">
 
-<web-app>
     <display-name>edu.stu:servlet-jsp-vpn:1.0-SNAPSHOT Web Application</display-name>
-
 
     <welcome-file-list>
         <welcome-file>index.htm</welcome-file>
@@ -24,7 +25,7 @@
 
     <context-param>
         <param-name>password</param-name>
-        <param-value>crypto</param-value>
+        <param-value>Professorcai3</param-value>
     </context-param>
 
     <filter>
@@ -37,12 +38,14 @@
     </filter-mapping>
 
     <servlet>
-        <servlet-name>initParameters</servlet-name>
         <description>Init the application parameters</description>
+        <servlet-name>initParameters</servlet-name>
         <servlet-class>edu.stu.InitParameters</servlet-class>
         <load-on-startup>0</load-on-startup>
     </servlet>
     <servlet>
+        <servlet-name>Download</servlet-name>
+        <servlet-class>edu.stu.controller.Download</servlet-class>
         <init-param>
             <param-name>apk</param-name>
             <param-value>/WEB-INF/files/openvpn-connect-3-0-5.apk</param-value>
@@ -51,11 +54,10 @@
             <param-name>exe</param-name>
             <param-value>/WEB-INF/files/openvpn-install-2.4.6-I602.exe</param-value>
         </init-param>
-        <servlet-name>Download</servlet-name>
-        <servlet-class>edu.stu.controller.Download</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ConfigDownload</servlet-name>
+        <servlet-class>edu.stu.controller.ConfigDownload</servlet-class>
         <init-param>
             <param-name>shellScriptPath</param-name>
             <param-value>/var/tomcat/get_ovpn.sh</param-value>
@@ -64,9 +66,7 @@
             <param-name>clientConfigFileDir</param-name>
             <param-value>/var/tomcat/ovpn-client-files/</param-value>
         </init-param>
-        <servlet-class>edu.stu.controller.ConfigDownload</servlet-class>
     </servlet>
-
 
     <servlet-mapping>
         <servlet-name>Download</servlet-name>
@@ -76,7 +76,6 @@
         <servlet-name>ConfigDownload</servlet-name>
         <url-pattern>/config.do</url-pattern>
     </servlet-mapping>
-
 
     <error-page>
         <error-code>404</error-code>
