@@ -17,28 +17,43 @@ public class Download extends HttpServlet {
 
     private static final Logger LOGGER = Logger.getLogger(Download.class);
 
-    private HttpServletRequest request;
-    private HttpServletResponse response;
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        request = req;
-        response = resp;
-        service(req.getParameter("type"));
+        service(req, resp, req.getParameter("type"));
 
     }
 
-    private void service(String type) throws ServletException, IOException {
-        LOGGER.info("request for downloading " + type);
+    private String getRemoteAddress(HttpServletRequest request) {
+        String ip = request.getHeader("X-Forwarded-For");
+        if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown")) {
+            ip = request.getHeader("X-Real-IP");
+        }
+        if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown")) {
+            ip = request.getHeader("Proxy-Client-IP");
+        }
+        if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown")) {
+            ip = request.getHeader("WL-Proxy-Client-IP");
+        }
+        if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown")) {
+            ip = request.getRemoteAddr();
+        }
+
+        return ip;
+    }
+
+    private void service(HttpServletRequest request, HttpServletResponse response, String type) throws ServletException, IOException {
+        LOGGER.info(getRemoteAddress(request) + " request for downloading " + type);
+
         if (null == type) {
-            noService();
+            noService(request, response);
             return;
         }
         if ("android".equals(type)) {
-            downloadClientFile("apk");
+            downloadClientFile(response, "apk");
         } else if ("windows".equals(type)) {
-            downloadClientFile("exe");
+            downloadClientFile(response, "exe");
         } else if ("config".equals(type)) {
             HttpSession session = request.getSession();
             session.setAttribute("username", request.getParameter("username"));
@@ -50,7 +65,7 @@ public class Download extends HttpServlet {
         }
     }
 
-    private void downloadClientFile(String initParamName) throws IOException {
+    private void downloadClientFile(HttpServletResponse response, String initParamName) throws IOException {
         String filepath = getServletConfig().getInitParameter(initParamName);
         File file = new File(getServletContext().getRealPath(filepath));
 
@@ -63,7 +78,8 @@ public class Download extends HttpServlet {
         IOUtils.copy(inputStream, outputStream);
     }
 
-    private void noService() throws ServletException, IOException {
+    private void noService(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+            IOException {
         request.getRequestDispatcher("/404.html").forward(request, response);
     }
 
